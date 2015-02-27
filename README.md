@@ -14,7 +14,7 @@ It is usually the back-end for a Logstash instance with Kibana as the frontend.
 
 1. Install [Docker](https://www.docker.com/).
 
-2. Download [automated build](https://registry.hub.docker.com/u/monsantoco/elasticsearch/) from public [Docker Hub Registry](https://registry.hub.docker.com/): `docker pull monsantoco/elasticsearch:v1.4.4`
+2. Download [automated build](https://registry.hub.docker.com/u/monsantoco/elasticsearch/) from public [Docker Hub Registry](https://registry.hub.docker.com/): `docker pull monsantoco/elasticsearch`
 
    (alternatively, you can build an image from Dockerfile: `docker build -t="monsantoco/elasticsearch:v1.4.4" github.com/monsantoco/docker-elasticsearch`)
 
@@ -23,14 +23,14 @@ It is usually the back-end for a Logstash instance with Kibana as the frontend.
 To start a basic container using ephemeral storage:
 
 ```sh
-docker run --rm --name %p -p 9200:9200 -p 9300:9300 monsantoco/elasticsearch:v1.4.4
+docker run --rm --name %p -p 9200:9200 -p 9300:9300 monsantoco/elasticsearch
 ```
 
 Within the container the data (`/esvol/data`), log (`/esvol/logs`) and config (`/esvol/config`) directories are exposed as volumes so to start a default container with attached persistent/shared storage for data:
 
 ```sh
 mkdir -p /es/data
-docker run --rm --name %p -v /es/data:/esvol/data -p 9200:9200 -p 9300:9300 monsantoco/elasticsearch:v1.4.4
+docker run --rm --name %p -v /es/data:/esvol/data -p 9200:9200 -p 9300:9300 monsantoco/elasticsearch
 ```
 
 Attaching persistent storage ensures that the data is retained across container restarts (with some obvious caveats). At this time though, given the state of maturity in this space, I would recommend this be done via a data container (hosting an AWS S3 bucket or other externalized, distributed persistent storage) in a possible production environment.
