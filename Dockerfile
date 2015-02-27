@@ -22,8 +22,8 @@
 # 2015/02/24 cgwong v1.2.0: Update to ES 1.4.4
 # ################################################################
 
-FROM cgswong/java:orajdk8
-MAINTAINER Stuart Wong <cgs.wong@gmail.com>
+FROM monsantoco/java:orajdk8
+MAINTAINER Stuart Wong <carrington.wong@monsanto.com>
 
 # Setup environment
 ENV ES_VERSION 1.4.4
