@@ -17,29 +17,22 @@
 set -eo pipefail
 
 # Set environment
-ES_HOME=/opt/elasticsearch
 ES_VOL=/esvol
 ES_CONF=${ES_CONF:-"/esvol/config/elasticsearch.yml"}
 ES_CLUSTER_NAME=${ES_CLUSTER_NAME:-"es_cluster01"}
 ES_PORT_9200_TCP_ADDR=${ES_PORT_9200_TCP_ADDR:-"9200"}
-##ES_DIR_LOG=${ES_DIR_LOG:-"$ES_VOL/logs"}
-##ES_DIR_DATA=${ES_DIR_DATA:-"$ES_VOL/data"}
-##ES_DIR_WORK=${ES_DIR_WORK:-"$ES_VOL/work"}
 
 # Set varibles as provided
-[ ! -z ${ES_CLUSTER_NAME} ] && sed -e "s/cluster.name: es_cluster01/cluster.name: ${ES_CLUSTER_NAME}/" -i $ES_CONF
-[ ! -z ${ES_PORT_9200_TCP_ADDR} ] && sed -e "s/#node.name: ES_PORT_9200_TCP_ADDR/node.name: ${ES_PORT_9200_TCP_ADDR}/" -i $ES_CONF
+[ ! -z ${ES_CLUSTER} ] && sed -e "s/cluster.name: es_cluster01/cluster.name: ${ES_CLUSTER}/" -i $ES_CONF
+[ ! -z ${ES_HTTP_PORT} ] && sed -e "s/#node.name: ES_HTTP_PORT/node.name: ${ES_HTTP_PORT}/" -i $ES_CONF
 [ ! -z ${ES_RECOVER_TIME} ] && sed -e "s/#gateway.recover_after_time: 5m/gateway.recover_after_time: ${ES_RECOVER_TIME}/" -i $ES_CONF
-[ ! -z ${ES_MULTICAST} ] && sed -e "s/#discovery.zen.ping.multicast.enabled: false/discovery.zen.ping.multicast.enabled: ${ES_MULTICAST}/" -i $ES_CONF
 [ ! -z ${ES_UNICAST_HOSTS} ] && sed -e "s/#discovery.zen.ping.unicast.hosts: [\"host1\", \"host2:port\"]/discovery.zen.ping.unicast.hosts: ${ES_UNICAST_HOSTS}/" -i $ES_CONF
 
 # if `docker run` first argument start with `--` the user is passing launcher arguments
 if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
-  ${ES_HOME}/bin/elasticsearch \
-    -Des.default.config=$ES_CONF \
-##    -Des.default.path.logs=$ES_DIR_LOG \
-##    -Des.default.path.data=$ES_DIR_DATA \
-##    -Des.default.path.work=$ES_DIR_WORK \
+  /opt/elasticsearch/bin/elasticsearch \
+    -config=$ES_CONF \
+    -cluster.name=${ES_CLUSTER} \
     "$@"
 fi
 

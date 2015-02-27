@@ -16,13 +16,14 @@
 #                           Now using Java 8.
 #                           Run as root user (for now).
 # 2015/02/02 cgwong v1.0.0: Added curl install, corrected syntax issues.
+# 2015/02/24 cgwong v1.1.0: Updated to 1.4.4
 # ################################################################
 
-FROM cgswong/java:oracleJDK8
-MAINTAINER Stuart Wong <cgs.wong@gmail.com>
+FROM monsantoco/java:orajdk8
+MAINTAINER Stuart Wong <carrington.wong@monsanto.com>
 
 # Setup environment
-ENV ES_VERSION 1.4.2
+ENV ES_VERSION 1.4.4
 ENV ES_HOME /opt/elasticsearch
 ENV ES_VOL /esvol
 ENV ES_USER elasticsearch
@@ -38,17 +39,17 @@ RUN apt-get -yq update && DEBIAN_FRONTEND=noninteractive apt-get -yq install cur
   && ln -s elasticsearch-${ES_VERSION} elasticsearch
 
 # Configure environment
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle/bin/java
 COPY src/ /
-
-#COPY conf/elasticsearch.yml ${ES_HOME}/config/
-#COPY conf/elasticsearch.yml ${ES_VOL}/config/
-#COPY elasticsearch.sh ${ES_EXEC}
 
 RUN groupadd -r ${ES_GROUP} \
   && useradd -M -r -d ${ES_HOME} -g ${ES_GROUP} -c "Elasticsearch Service User" -s /bin/false ${ES_USER} \
+  && mkdir -p ${ES_VOL}/work \
+  && mkdir -p ${ES_VOL}/data \
+  && mkdir -p ${ES_VOL}/logs \
+  && mkdir -p ${ES_VOL}/plugins \
   && chown -R ${ES_USER}:${ES_GROUP} ${ES_HOME}/ ${ES_VOL} ${ES_EXEC} \
   && chmod +x ${ES_EXEC}
+
 VOLUME ["${ES_VOL}/data", "${ES_VOL}/config", "${ES_VOL}/logs"]
 
 # Define working directory.
