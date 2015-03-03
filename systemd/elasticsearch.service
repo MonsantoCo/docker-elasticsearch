@@ -16,6 +16,9 @@ TimeoutStartSec=0
 EnvironmentFile=/etc/environment
 Environment="ES_CLUSTER=es01"
 
+LimitNOFILE=65535
+LimitMEMLOCK=infinity
+
 ExecStartPre=/usr/bin/mkdir -p /es/data
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p

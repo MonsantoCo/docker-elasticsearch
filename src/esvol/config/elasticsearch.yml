@@ -42,4 +42,4 @@ discovery.zen.ping.multicast.enabled: false
 # Elasticsearch performs poorly when JVM starts swapping so ensure that
 # it _never_ swaps.
 # Set this property to true to lock the memory:
-#bootstrap.mlockall: true
+bootstrap.mlockall: true
