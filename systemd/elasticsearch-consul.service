@@ -27,7 +27,7 @@ ExecStartPre=/usr/bin/docker pull monsantoco/elasticsearch
 ExecStart=/usr/bin/docker run --rm --name %p -p 9200:9200 -v /es/data:/esvol/data -e ES_CLUSTER=${ES_CLUSTER} -e KV_TYPE=consul monsantoco/elasticsearch
 
 ExecStartPost=/usr/bin/curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/host/${COREOS_PRIVATE_IPV4} -XPUT -d value='{"host":"%H","http_port":9200,"cluster_port":9300},"cluster_name":"$ES_CLUSTER"}'
-ExecStartPost=/usr/bin/curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/cluster -XPUT -d value="${ES_CLUSTER}"
+ExecStartPost=/usr/bin/curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/cluster -XPUT -d "${ES_CLUSTER}"
 
 ExecStop=-/usr/bin/docker stop %p
 ExecStop=-/usr/bin/docker kill %p
