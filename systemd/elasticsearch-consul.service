@@ -4,10 +4,12 @@ Description=Elasticsearch
 # Requirements
 Requires=docker.service
 Requires=fleet.service
+Requires=consul.service
 
 # Dependency ordering and binding
 After=docker.service
 After=fleet.service
+After=consul.service
 
 [Service]
 TimeoutStartSec=0
