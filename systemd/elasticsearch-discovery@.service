@@ -1,0 +1,31 @@
+[Unit]
+Description=Elasticsearch Discovery Service
+
+# Requirements
+Requires=docker.service
+Requires=etcd.service
+Requires=fleet.service
+
+# Dependency ordering and binding
+Before=elasticsearch@%i.service
+After=docker.service
+After=etcd.service
+After=fleet.service
+BindsTo=elasticsearch@%i.service
+
+
+[Service]
+TimeoutStartSec=10m
+Restart=on-failure
+RestartSec=5s
+
+# Set environmental variables
+EnvironmentFile=/etc/environment
+
+ExecStart=/bin/bash -c '\
+  while true; do \
+    etcdctl set /services/elasticsearch/${COREOS_PRIVATE_IPV4} \'{"http_port": 9200, "transport_port": 9300}\' --ttl 60; \
+    sleep 45; \
+  done'
+
+ExecStop=/usr/bin/etcdctl rm /services/elasticsearch/${COREOS_PRIVATE_IPV4}
