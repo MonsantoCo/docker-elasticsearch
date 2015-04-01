@@ -3,13 +3,13 @@ Description=Elasticsearch Discovery Service
 
 # Requirements
 Requires=docker.service
-Requires=etcd.service
+Requires=consul.service
 Requires=fleet.service
 
 # Dependency ordering and binding
 Before=elasticsearch@%i.service
 After=docker.service
-After=etcd.service
+After=consul.service
 After=fleet.service
 BindsTo=elasticsearch@%i.service
 
@@ -26,8 +26,8 @@ ExecStart=/bin/bash -c '\
   while true; do \
     curl -Ls ${COREOS_PRIVATE_IPV4}:9200
     if [ $? -eq 0 ]; then \
-      curl -L http://${COREOS_PRIVATE_IPV4}:4001/v2/keys/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XPUT -d value=\'{"host":"%H","http_port":9200,"cluster_port":9300}\' --ttl 60 ;\
+      curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XPUT -d \'{"host":"%H","http_port":9200,"cluster_port":9300}\' --ttl 60 ;\
     sleep 45 ;\
   done'
 
-ExecStop=/usr/bin/curl -L http://${COREOS_PRIVATE_IPV4}:4001/v2/keys/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XDELETE
+ExecStop=/usr/bin/curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XDELETE
