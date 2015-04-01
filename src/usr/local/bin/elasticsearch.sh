@@ -51,7 +51,7 @@ if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
   ulimit -l unlimited
 
   /opt/elasticsearch/bin/elasticsearch \
-    --config=${ES_CONF} \
+    --config=${ES_CFG_FILE} \
     --cluster.name=${ES_CLUSTER} \
     "$@"
 fi
