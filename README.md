@@ -28,6 +28,16 @@ docker run --rm --name %p
 Attaching persistent storage ensures that the data is retained across container restarts (with some obvious caveats). It is recommended this be done via a data container, preferably hosting an AWS S3 bucket or other externalized, distributed persistent storage.
 
 
+### Available Features
+A few plugins are installed namely:
+
+- BigDesk: Provides live charts and statistics for an Elasticsearch cluster. You can open web browser and navigate to `http://localhost:9200/_plugin/bigdesk/` it will open Bigdesk and auto-connect to the ES node. You may need to change the `localhost` and `9200` port to the correct values for your environment/setup.
+
+- Elasticsearch Head: A web front end for an Elasticsearch cluster. Open `http://localhost:9200/_plugin/head/` and it will run it as a plugin within the Elasticsearch cluster.
+
+- Curator: Helps with management of indices. You can learn more at the Elasticsearch Curator documentation site `http://www.elastic.co/guide/en/elasticsearch/client/curator/current/index.html`.
+
+
 ### Configuring the environment (changing defaults)
 The following environment variables can be used to configure the container using the Docker `-e` (or `--env`) flag:
 
