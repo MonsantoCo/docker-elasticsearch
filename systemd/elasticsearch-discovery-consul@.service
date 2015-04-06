@@ -21,11 +21,12 @@ RestartSec=5s
 
 # Set environmental variables
 EnvironmentFile=/etc/environment
+Environment="ES_CLUSTER=es01"
 
 ExecStart=/bin/bash -c '\
   while true; do \
-    curl -Ls ${COREOS_PRIVATE_IPV4}:9200
-    [ $? -eq 0 ] && curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${    ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XPUT -d \'{"host":"%H","http_port":9200,"cluster_po    rt":9300}\' --ttl 60 ;\
+    curl -Ls ${COREOS_PRIVATE_IPV4}:9200 ;\
+    [ $? -eq 0 ] && curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XPUT -d \'{"host":"%H","http_port":9200,"cluster_port":9300}\' --ttl 60 ;\
     sleep 45 ;\
   done'
 

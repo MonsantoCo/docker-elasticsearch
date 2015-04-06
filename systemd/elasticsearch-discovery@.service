@@ -5,12 +5,13 @@ Description=Elasticsearch Discovery Service
 Requires=docker.service
 Requires=etcd.service
 Requires=fleet.service
+Wants=elasticsearch@%i.service
 
 # Dependency ordering and binding
-Before=elasticsearch@%i.service
 After=docker.service
 After=etcd.service
 After=fleet.service
+After=elasticsearch@%i.service
 BindsTo=elasticsearch@%i.service
 
 
@@ -21,11 +22,12 @@ RestartSec=5s
 
 # Set environmental variables
 EnvironmentFile=/etc/environment
+Environment="ES_CLUSTER=es01"
 
 ExecStart=/bin/bash -c '\
   while true; do \
-    curl -Ls ${COREOS_PRIVATE_IPV4}:9200
-    [ $? -eq 0 ] && curl -L http://${COREOS_PRIVATE_IPV4}:4001/v2/keys/services/logging/es/${    ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XPUT -d value=\'{"host":"%H","http_port":9200,"cluster_po    rt":9300}\' --ttl 60 ;\
+    curl -Ls ${COREOS_PRIVATE_IPV4}:9200 ;\
+    [ $? -eq 0 ] && curl -L http://${COREOS_PRIVATE_IPV4}:4001/v2/keys/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XPUT -d value=\'{"host":"%H","http_port":9200,"cluster_port":9300}\' --ttl 60 ;\
     sleep 45 ;\
   done'
 

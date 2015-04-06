@@ -9,11 +9,11 @@ Wants=elasticsearch-dv@%i.service
 Wants=elasticsearch-discovery@%i.service
 
 # Dependency ordering and binding
+Before=elasticsearch-discovery@%i.service
 After=docker.service
 After=etcd.service
 After=fleet.service
 After=elasticsearch-dv@%i.service
-After=elasticsearch-discovery@%i.service
 
 [Service]
 TimeoutStartSec=10m
