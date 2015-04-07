@@ -37,7 +37,7 @@ ExecStart=/bin/bash -c '\
   if [ $? -eq 0 ]; then \
     UNICAST_HOSTS=$(for key in $(etcdctl ls --recursive /services/logging/es/${ES_CLUSTER}/host); do \
       ip=$(echo $key | cut -d/ -f7) ;\
-      port=$(etcdctl get $key | cut -d, -f2 | cut -d: -f2 | tr -d " ") ;\
+      port=$(etcdctl get $key | cut -d, -f3 | cut -d: -f2 | tr -d "} ") ;\
       echo "$ip:$port" ;\
     done | paste -s -d",") ;\
   else \
