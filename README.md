@@ -1,5 +1,5 @@
 ## ElasticSearch Dockerfile
-This is a highly configurable [ElasticSearch](https://www.elastic.co/products/elasticsearch) (v1.4.4) [Docker image](https://www.docker.com) built using [Docker's automated build](https://registry.hub.docker.com/u/monsantoco/elasticsearch/) process published to the public [Docker Hub Registry](https://registry.hub.docker.com/). It has optional AWS EC2 discovery.
+This is a highly configurable [ElasticSearch](https://www.elastic.co/products/elasticsearch) (v1.5.0) [Docker image](https://www.docker.com) built using [Docker's automated build](https://registry.hub.docker.com/u/monsantoco/elasticsearch/) process published to the public [Docker Hub Registry](https://registry.hub.docker.com/). It has optional AWS EC2 discovery.
 
 It is usually the back-end for a [Logstash](https://www.elastic.co/products/logstash) instance with [Kibana](https://www.elastic.co/products/kibana) as the frontend forming what is commonly referred to as an **ELK stack**.
 
@@ -28,6 +28,16 @@ docker run --rm --name %p
 Attaching persistent storage ensures that the data is retained across container restarts (with some obvious caveats). It is recommended this be done via a data container, preferably hosting an AWS S3 bucket or other externalized, distributed persistent storage.
 
 
+### Available Features
+A few plugins are installed namely:
+
+- BigDesk: Provides live charts and statistics for an Elasticsearch cluster. You can open web browser and navigate to `http://localhost:9200/_plugin/bigdesk/` it will open Bigdesk and auto-connect to the ES node. You may need to change the `localhost` and `9200` port to the correct values for your environment/setup.
+
+- Elasticsearch Head: A web front end for an Elasticsearch cluster. Open `http://localhost:9200/_plugin/head/` and it will run it as a plugin within the Elasticsearch cluster.
+
+- Curator: Helps with management of indices. You can learn more at the Elasticsearch Curator documentation site `http://www.elastic.co/guide/en/elasticsearch/client/curator/current/index.html`.
+
+
 ### Configuring the environment (changing defaults)
 The following environment variables can be used to configure the container using the Docker `-e` (or `--env`) flag:
 
@@ -53,16 +63,6 @@ The following volumes are exposed for Docker host volume mounts using `-v` Docke
 
 
 ### Service Discovery
-Sample systemd unit files have been provided to show how service discovery could be achieved using this image, assuming the same is being done for the other components in the ELK stack. The examples use etcd and consul as the service registries though there are other options including DNS discovery. Below are the expected KV using etc or consul.
-
-- `/services/logging/es/<cluster_name>/host`: The key, a resolvable hostname (preferrably) or IPV4 address of each ES data node in the specified cluster, would be below this directory. The key values are:
-  - http_port: HTTP port (default 9200)
-  - cluster_port: Cluster transport port (default 9300)
-
-- `/services/logging/es/<cluster_name>/proxy`: The key, resolvable hostname (preferrably) or IPV4 address of the ES proxy node in the specified cluster, would be below this directory. The key values are the same as data nodes.
-
-The `<cluster_name>` directory name is injected/created via the `ES_CLUSTER` environment variable. This variable is then expected to be provided in any supporting Logstash and Kibana images in this series.
-
-A side load unit would be used to dynamically update the appropriate key/values based on health checks.
+Sample systemd unit files have been provided to show how service discovery could be achieved using this image, assuming the same is being done for the other components in the ELK stack. The examples use etcd and DNS as the service registries though there are other options.
 
 Please refer to the appropriate systemd unit file for further details.

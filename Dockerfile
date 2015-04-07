@@ -37,7 +37,9 @@ ENV ES_GROUP elasticsearch
 
 # Install requirements and Elasticsearch
 WORKDIR ${ES_BASE}
-RUN apt-get -yq update && DEBIAN_FRONTEND=noninteractive apt-get -yq install curl \
+RUN apt-get -yq update && DEBIAN_FRONTEND=noninteractive apt-get -yq install \
+  curl \
+  python-pip \
   && apt-get -y clean && apt-get -y autoclean && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* \
   && curl -s https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz | tar zxf - \
@@ -54,6 +56,7 @@ RUN groupadd -r ${ES_GROUP} \
   && mkdir -p ${ES_VOL}/work \
   && chown -R ${ES_USER}:${ES_GROUP} ${ES_HOME}/ ${ES_VOL} ${ES_EXEC} \
   && chmod +x ${ES_EXEC} \
+  && pip install elasticsearch-curator \
   && ${ES_HOME}/bin/plugin -install elasticsearch/elasticsearch-cloud-aws/2.5.0 --silent --timeout 2m \
   && ${ES_HOME}/bin/plugin -install lukas-vlcek/bigdesk --silent --timeout 2m \
   && ${ES_HOME}/bin/plugin -install mobz/elasticsearch-head --silent --timeout 2m
@@ -69,4 +72,5 @@ EXPOSE 9200 9300
 
 # Start container
 #USER ${ES_USER}
-CMD ["/usr/local/bin/elasticsearch.sh"]
+ENTRYPOINT ["/usr/local/bin/elasticsearch.sh"]
+CMD [""]
