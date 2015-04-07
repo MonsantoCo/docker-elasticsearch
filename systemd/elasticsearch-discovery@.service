@@ -27,7 +27,7 @@ Environment="ES_CLUSTER=es01"
 
 ExecStart=/bin/bash -c '\
   while true; do \
-    curl -Ls ${COREOS_PRIVATE_IPV4}:9200 ;\
+    curl -Ls ${COREOS_PRIVATE_IPV4}:9200 >dev/null ;\
     [ $? -eq 0 ] && curl -L http://${COREOS_PRIVATE_IPV4}:4001/v2/keys/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4}?ttl=60 -XPUT -d value=\'{"host":"%H","http_port":9200,"cluster_port":9300}\' ;\
     sleep 50 ;\
   done'
