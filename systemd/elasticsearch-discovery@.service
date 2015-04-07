@@ -13,6 +13,7 @@ After=etcd.service
 After=fleet.service
 After=elasticsearch@%i.service
 BindsTo=elasticsearch@%i.service
+PartOf=elasticsearch@%i.service
 
 
 [Service]

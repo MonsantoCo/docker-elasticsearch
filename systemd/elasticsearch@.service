@@ -5,7 +5,7 @@ Description=Elasticsearch
 Requires=docker.service
 Requires=etcd.service
 Requires=fleet.service
-Wants=elasticsearch-dv@%i.service
+Requires=elasticsearch-dv@%i.service
 Wants=elasticsearch-discovery@%i.service
 
 # Dependency ordering and binding
@@ -14,6 +14,7 @@ After=docker.service
 After=etcd.service
 After=fleet.service
 After=elasticsearch-dv@%i.service
+BindsTo=elasticsearch-dv@%i.service
 
 [Service]
 TimeoutStartSec=10m
@@ -72,3 +73,4 @@ WantedBy=multi-user.target
 
 [X-Fleet]
 Conflicts=%p@*.service
+MachineOf=elasticsearch-dv@%i.service

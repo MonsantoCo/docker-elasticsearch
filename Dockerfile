@@ -72,4 +72,5 @@ EXPOSE 9200 9300
 
 # Start container
 #USER ${ES_USER}
-CMD ["/usr/local/bin/elasticsearch.sh"]
+ENTRYPOINT ["/usr/local/bin/elasticsearch.sh"]
+CMD [""]
