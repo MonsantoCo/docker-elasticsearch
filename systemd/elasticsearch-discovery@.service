@@ -15,7 +15,6 @@ After=elasticsearch@%i.service
 BindsTo=elasticsearch@%i.service
 PartOf=elasticsearch@%i.service
 
-
 [Service]
 TimeoutStartSec=10m
 Restart=on-failure
