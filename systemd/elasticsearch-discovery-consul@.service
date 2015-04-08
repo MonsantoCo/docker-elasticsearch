@@ -5,14 +5,16 @@ Description=Elasticsearch Discovery Service
 Requires=docker.service
 Requires=consul.service
 Requires=fleet.service
+Wants=elasticsearch@%i.service
 
 # Dependency ordering and binding
 Before=elasticsearch@%i.service
 After=docker.service
 After=consul.service
 After=fleet.service
+After=elasticsearch@%i.service
 BindsTo=elasticsearch@%i.service
-
+PartOf=elasticsearch@%i.service
 
 [Service]
 TimeoutStartSec=10m
@@ -25,9 +27,16 @@ Environment="ES_CLUSTER=es01"
 
 ExecStart=/bin/bash -c '\
   while true; do \
-    curl -Ls ${COREOS_PRIVATE_IPV4}:9200 ;\
-    [ $? -eq 0 ] && curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XPUT -d \'{"host":"%H","http_port":9200,"cluster_port":9300}\' --ttl 60 ;\
-    sleep 45 ;\
+    curl -Ls ${COREOS_PRIVATE_IPV4}:9200 >/dev/null ;\
+    if [ $? -eq 0 ]; then \
+      curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/host/${COREOS_PRIVATE_IPV4}?ttl=60 -XPUT -d \'{"host":"%H","http_port":9200,"cluster_port":9300}\' ;\
+    else \
+      curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/host/${COREOS_PRIVATE_IPV4} -XDELETE ;\
+    fi ;\
+    sleep 58 ;\
   done'
 
-ExecStop=/usr/bin/curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/${COREOS_PRIVATE_IPV4} -XDELETE
+ExecStop=/usr/bin/curl -L http://${COREOS_PRIVATE_IPV4}:8500/v1/kv/services/logging/es/${ES_CLUSTER}/host/${COREOS_PRIVATE_IPV4} -XDELETE
+
+[X-Fleet]
+MachineOf=elasticsearch@%i.service
