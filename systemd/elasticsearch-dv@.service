@@ -1,5 +1,5 @@
 [Unit]
-Description=Elasticsearch Data Volume
+Description=Elasticsearch Data Volume %i
 
 # Requirements
 Requires=docker.service
@@ -9,4 +9,4 @@ Before=elasticsearch@%i.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/sh -c "docker inspect %p-%i >/dev/null 2>&1 || docker run --name %p-%i -v /var/lib/elasticsearch busybox chmod -R 0777 /var/lib/elasticsearch"
+ExecStart=/bin/sh -c "docker inspect %p-%i &>/dev/null || docker run --name %p-%i --volume /var/lib/elasticsearch alpine:latest chmod -R 0777 /var/lib/elasticsearch"
