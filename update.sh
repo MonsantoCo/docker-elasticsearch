@@ -30,7 +30,7 @@ versions=( $(printf '%s\n' "${versions[@]}"|sort -V) )
 
 for version in "${versions[@]}"; do
   dlVersion=$(echo $version | tr '.' '-')
-  if $(curl -fsSL --insecure https://www.elastic.co/downloads/past-releases/elasticsearch-$dlVersion &>/dev/null); then
+  if $(curl -fsSL https://www.elastic.co/downloads/past-releases/elasticsearch-$dlVersion &>/dev/null); then
     echo "${yellow}Updating version: ${version}${reset}"
     cp -R src $version/
     sed -e 's/%%VERSION%%/'"$version"'/' < Dockerfile.tpl > "$version/Dockerfile"

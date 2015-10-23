@@ -25,7 +25,7 @@ RUN apk --update add \
       ${ES_VOL}/work \
       ${ES_VOL}/config \
       /opt &&\
-    curl -sSL --insecure https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz | tar zxf - -C /opt &&\
+    curl -sSL https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz | tar zxf - -C /opt &&\
     ln -s /opt/elasticsearch-${ES_VERSION} ${ES_HOME} &&\
     addgroup ${ES_GROUP} &&\
     adduser -h ${ES_HOME} -D -s /bin/bash -G ${ES_GROUP} ${ES_USER} &&\
