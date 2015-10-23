@@ -1,5 +1,5 @@
 # Docker file to create Elasticsearch container.
-FROM cgswong/java:openjdk8
+FROM cgswong/java:openjre8
 
 # Setup environment
 ENV ES_VERSION %%VERSION%%
