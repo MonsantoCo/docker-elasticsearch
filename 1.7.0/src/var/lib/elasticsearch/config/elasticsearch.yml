@@ -50,3 +50,8 @@ bootstrap.mlockall: true
 #gateway.type: s3
 #repositories.s3.bucket: "ES_AWS_S3_BUCKET"
 #network.public_host: _ec2_
+
+# Logging
+index.search.slowlog.threshold.query.warn: "10s"
+index.search.slowlog.threshold.fetch.debug: "1s"
+index.indexing.slowlog.threshold.index.info: "5s"
